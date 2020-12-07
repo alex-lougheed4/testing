@@ -8,9 +8,11 @@ import static org.lwjgl.glfw.GLFW.*;
 public class  Window {
     private long window;
 
-    private int width,height;
+
+
+    private int width = 640,height = 480;
     public Window(){
-        setSize(640,480);
+        setSize(width,height);
     }
 
     public void createWindow(){
@@ -41,7 +43,14 @@ public class  Window {
         this.height = height;
     }
 
-    public int getWidht(){ return width; }
+    public void setProjection(){
 
-    public int getHiehgt(){return height; }
+    }
+
+
+    public int getWidth(){ return width; }
+
+    public int getHeight(){return height; }
+
+    public long returnWindow(){return window; }
 }

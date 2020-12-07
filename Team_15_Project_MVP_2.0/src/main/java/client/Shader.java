@@ -19,6 +19,7 @@ public class  Shader {
     private int vs;
     private int fs;
 
+
     public Shader(String filename){
         program = glCreateProgram();
 

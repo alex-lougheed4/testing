@@ -14,6 +14,21 @@ public class clientLauncher {
     static String playerUsername;
     static player thisPlayer;
     static int numberOfNearbyPlayers; //increases per client.player in x radius
+    /**
+     * Field of View in Radians
+     */
+    private static final float FOV = (float) Math.toRadians(60.0f);
+
+    private static final float Z_NEAR = 0.01f;
+
+    private static final float Z_FAR = 1000.f;
+
+    private static Matrix4f projectionMatrix;
+
+    private static Transformation transformation;
+
+
+
 
 
 
@@ -33,7 +48,10 @@ public class clientLauncher {
         win.createWindow();
 
 
+
         GL.createCapabilities(); //allows manipulation of data on the window
+
+
 
         float tex_coords[] = new float[]{
                 0f, 1f,
@@ -74,16 +92,30 @@ public class clientLauncher {
         Shader texShader = new Shader("texture");
         Shader shader = new Shader("shader");
 
-        Matrix4f projection = new Matrix4f().ortho2D(-640/2,640/2,480/2,-480/2);
+        float aspectRatio = (float) win.getWidth() / win.getHeight();
+        projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio,
+                Z_NEAR, Z_FAR);
 
 
-        playerModel thisPlayerModel = new playerModel(texShader, tex, playerModelVertices,tex_coords);
+
+
+        playerModel thisPlayerModel = new playerModel(texShader, tex, playerModelVertices,tex_coords); //creates new playermodel
+
+        GameItem gameItem = new GameItem(thisPlayerModel); //creates new gameItem of playerModel
+
+        GameItem[] gameItems = new GameItem[]{
+            gameItem
+        };
+
 
         Shader flatColorShader = new Shader("flatcolor");
         Ground ground = new Ground(flatColorShader, groundvertices);
 
 
-        float c[] = {1,0,0,0};
+        //float c[] = {1,0,0,0};
+
+        transformation = new Transformation();
+
 
 
         //players = serverLauncher.getPlayerArray(); //needs go take data from server
@@ -95,17 +127,52 @@ public class clientLauncher {
             glClearColor(255, 255,255,0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            Shader.setUniform("projection",projection);
+            shader.setUniform("projection",projectionMatrix);
+
+
+            //clientLauncher.render(shader,gameItems);
+
 
             ground.render();
 
             thisPlayerModel.render();
 
+
+
             glfwPollEvents();
             win.swapBuffers();
 
+            //Upwards Movement
 
-            //checkForPlayerInput(win,thisPlayerPosX,thisPlayerPosY);
+            if (glfwGetKey(win.returnWindow(), GLFW_KEY_W) == GL_TRUE) {
+                System.out.print("test1");
+                //increase thisPlayerPosY
+                thisPlayerPosY += 0.01;
+
+            }
+
+
+            //Downwards movement
+            if (glfwGetKey(win.returnWindow(), GLFW_KEY_S) == GL_TRUE) {
+                System.out.print("test2");
+                //Decrease thisPlayerPosY
+                thisPlayerPosY -= 0.01;
+            }
+
+            //Left Movement
+            if (glfwGetKey(win.returnWindow(), GLFW_KEY_A) == GL_TRUE) {
+                System.out.print("test3");
+                //Decease thisPlayerPosX
+                thisPlayerPosX -= 0.01;
+            }
+
+            //Right Movement
+            if (glfwGetKey(win.returnWindow(), GLFW_KEY_D) == GL_TRUE) {
+                System.out.print("test4");
+                //Increase thisPlayerPosX
+                thisPlayerPosX += 0.01;
+            }
+
 
         }
 
@@ -126,7 +193,7 @@ public class clientLauncher {
         return playerUsername;
         }
 
-        public static void checkForPlayerInput(long window, float posX, float posY) {
+     /**   public static void checkForPlayerInput(long window, float posX, float posY) {
 
             //Upward movement
             if (glfwGetKey(window, GLFW_KEY_W) == GL_TRUE) {
@@ -156,6 +223,26 @@ public class clientLauncher {
             }
 
         }
+      **/
+
+
+
+        public static void render(Shader shader, GameItem[] gameItems){
+            for(GameItem gameItem : gameItems) {
+                // Set world matrix for this item
+                Matrix4f worldMatrix =
+                        transformation.getWorldMatrix(
+                                gameItem.getPosition(),
+                                gameItem.getRotation(),
+                                gameItem.getScale());
+                shader.setUniform("worldMatrix", worldMatrix);
+                // Render the mes for this game item
+                gameItem.getPlayerModel().render();
+            }
+        }
+
+
+
 
 
 

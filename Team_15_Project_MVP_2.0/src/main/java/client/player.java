@@ -55,19 +55,6 @@ public class player {
 
     }
 
-    public void render(int userID){
-
-            glBegin(GL_QUADS);
-            glColor4f(255, 0, 0, 0); // Pass in the client.player's colour
-            glVertex2f(-0.05f, 0.05f); //change to be relative to the size of the window
-
-            glVertex2f(0.05f, 0.05f);
-
-            glVertex2f(0.05f, -0.05f);
-
-            glVertex2f(-0.05f, -0.05f);
-            glEnd();
-        }
 
 
     public void setPlayerModelColour(Color playerColour) {
@@ -75,9 +62,6 @@ public class player {
         System.out.print(playerModelColour);
     }
 
-    public void playerCamera(float posY) {
-
-    }
 
     public int getUserID() {
         return userID;
