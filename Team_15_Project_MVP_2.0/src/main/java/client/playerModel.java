@@ -75,6 +75,7 @@ public class playerModel {
 
         shader.bind();
         shader.setUniform("u_Texture", 0); //texture slot 0
+
         shader.unbind();
 
     }
