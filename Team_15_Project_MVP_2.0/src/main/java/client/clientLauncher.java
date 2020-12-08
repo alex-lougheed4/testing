@@ -1,6 +1,9 @@
 package client;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLUtil;
@@ -37,6 +40,8 @@ public class clientLauncher {
         float thisPlayerPosX = 0f;
         float thisPlayerPosY = 0f;
 
+
+
         if (!glfwInit()) {
             throw new IllegalStateException("Failed to initialize glfw");
         }
@@ -50,6 +55,7 @@ public class clientLauncher {
 
 
         GL.createCapabilities(); //allows manipulation of data on the window
+
 
 
 
@@ -128,6 +134,7 @@ public class clientLauncher {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.setUniform("projection",projectionMatrix);
+            shader.setUniform("transform",thisPlayerModel.getTransform());
 
 
             //clientLauncher.render(shader,gameItems);
@@ -139,6 +146,7 @@ public class clientLauncher {
 
 
 
+
             glfwPollEvents();
             win.swapBuffers();
 
@@ -147,7 +155,8 @@ public class clientLauncher {
             if (glfwGetKey(win.returnWindow(), GLFW_KEY_W) == GL_TRUE) {
                 System.out.print("test1");
                 //increase thisPlayerPosY
-                thisPlayerPosY += 0.01;
+                Vector3f temp = new Vector3f(0f,thisPlayerPosY+0.01f,0f);
+                thisPlayerModel.setPosition(temp);
 
             }
 
@@ -156,21 +165,23 @@ public class clientLauncher {
             if (glfwGetKey(win.returnWindow(), GLFW_KEY_S) == GL_TRUE) {
                 System.out.print("test2");
                 //Decrease thisPlayerPosY
-                thisPlayerPosY -= 0.01;
+
+
+
             }
 
             //Left Movement
             if (glfwGetKey(win.returnWindow(), GLFW_KEY_A) == GL_TRUE) {
                 System.out.print("test3");
                 //Decease thisPlayerPosX
-                thisPlayerPosX -= 0.01;
+
             }
 
             //Right Movement
             if (glfwGetKey(win.returnWindow(), GLFW_KEY_D) == GL_TRUE) {
                 System.out.print("test4");
                 //Increase thisPlayerPosX
-                thisPlayerPosX += 0.01;
+
             }
 
 
