@@ -1,4 +1,6 @@
 package client;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
@@ -15,10 +17,13 @@ public class playerModel {
     private final Shader shader;
     private final Texture texture;
 
+    private Vector3f position = new Vector3f(0,0,0);
+
     private int vaoId;
     private int vboId;
     private int draw_count;
     private int t_id;
+    private Matrix4f transform = new Matrix4f(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
 
 
@@ -80,10 +85,15 @@ public class playerModel {
 
     }
 
+    public static void transformTranslate() {
+    }
+
     public void render(){ //draws vbo player WIP
 
         shader.bind();
         texture.bind(0);
+
+
 
         glBindVertexArray(vaoId);
 
@@ -91,10 +101,31 @@ public class playerModel {
 
         glDrawArrays(GL_TRIANGLES, 0, draw_count);
 
+
         glBindVertexArray(0);
 
         texture.unbind();
         shader.unbind();
+
+
+
+    }
+
+    public Matrix4f getTransform(){
+        return transform;
+    }
+
+
+    public void setPosition(Vector3f position)
+    {
+        this.position = position;
+        updateMatrix();
+    }
+
+    protected void updateMatrix()
+    {
+        transform.identity();
+        transform.translate(position);
 
 
 
